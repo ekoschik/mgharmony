@@ -143,7 +143,7 @@ public class mgharmony extends JFrame
     public int width() { return getContentPane().getSize().width; }
     public int height() { return getContentPane().getSize().height; }
     public int center_width() { return width() / 2; }
-    public int center_height() { return height() / 2; }
+    public int center_height() { return height() / 2 + 30; }
 
     private int dist(Dot d1, Dot d2) {
         return (int) Math.sqrt(
