@@ -231,7 +231,7 @@ public class mgharmony extends JFrame
 
     public static void main(String args[]) {
         mgharmony one = new mgharmony();
-        (new Menu(one)).start();
+        (new TerminalMenu(one)).start();
         while(true) {   
             one.tick();
             pause(g_pause_count);

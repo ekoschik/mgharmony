@@ -37,13 +37,13 @@ class StylesAndProperties {
 }
 
 
-public class Menu extends Thread
+public class TerminalMenu extends Thread
 {
     StylesAndProperties styles;
     private BufferedReader buffer;
     mgharmony frame;
 
-    public Menu(mgharmony _frame){
+    public TerminalMenu(mgharmony _frame){
         InputStreamReader reader = new InputStreamReader (System.in);
         buffer = new BufferedReader (reader);
         frame = _frame;
@@ -128,7 +128,7 @@ public class Menu extends Thread
                     println("Circle To Closest Dot");
 
 
-                    println("\n[ 0 ] to exit.");
+                    println("\n[ 0 ] to exit.\n");
                     toggle_index = readInt("Pick a Style Bit to toggle > ");
 
                     switch(toggle_index) {
