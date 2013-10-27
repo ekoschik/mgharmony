@@ -4,9 +4,9 @@ import java.io.*;
 class StylesAndProperties {
     
     // These are checked for changes by the frame every tick 
-    public int num_dots;
-    public int period;
-    public int dot_radius; 
+    public int num_dots = 30;
+    public int period = 10000;
+    public int dot_radius = 3; 
 
     // These are checked every per dot, every tick, to decide what to draw
     public boolean bit_dot = true;
@@ -16,23 +16,7 @@ class StylesAndProperties {
     public boolean bit_circle_to_next_dot = false;
     public boolean bit_circle_to_closest_dot = false;
 
-    //Defaults and Initialization
-    final int INITIAL_DOT_COUNT = 30;
-    final int INITIAL_DOT_PERIOD = 10000;
-    final int INITIAL_DOT_RADIUS = 3;
-    public StylesAndProperties() {
 
-        num_dots = INITIAL_DOT_COUNT;
-        period = INITIAL_DOT_PERIOD;
-        dot_radius = INITIAL_DOT_RADIUS;
-
-        bit_dot = true;
-        bit_line_to_center = false;
-        bit_line_to_next_dot = false;
-        bit_line_to_closest_dot = false;
-        bit_circle_to_next_dot = false;
-        bit_circle_to_closest_dot = false;
-    }
 
 }
 
@@ -57,7 +41,7 @@ public class TerminalMenu extends Thread
         println("##############################################");
         for(int i = 0; i<3; ++i)
             println("#                                            #");
-        println("#                mgharmony                   #");
+        println("#                 mgharmony                  #");
         for(int i = 0; i<3; ++i)
             println("#                                            #");
         println("##############################################\n");
@@ -72,33 +56,70 @@ public class TerminalMenu extends Thread
             println(" [ R : Radius ]\t\t" + styles.dot_radius + "\t\tDots radius (pixels)");
             println(" [ S : Styles ]\t\t...\t\tToggle Style Bits");
             
-            String choice = readLine(">");
-            
-            if(choice.equalsIgnoreCase("n") || choice.equalsIgnoreCase("number")) 
+            String[] input = readLine(">").split("[ ]+");
+
+            //The N (Number of Dots) Command
+
+            if(input[0].equalsIgnoreCase("n") 
+                || input[0].equalsIgnoreCase("num")
+                || input[0].equalsIgnoreCase("number")
+                || input[0].equalsIgnoreCase("numdots")) 
             {
-                int n = readInt("Enter new number of dots: ");
-                if(n < 0)
-                {
-                    n = - n;
-                    println("I'll assume you mean " + n + ", and not a negative amount.");
+                int n = -1;
+                if(input.length >= 2) {
+                    n = toPosInt(input[1]);
                 }
-                styles.num_dots = n;
-                println("\nNumber of dots set to " + n + ".\n");
+                else {
+                    n = readInt("Enter new number of dots: ");    
+                }
+
+                if(n < 0) 
+                    println("Not a valid number of dots.");
+                else {
+                    styles.num_dots = n;
+                    println("\nNumber of dots set to " + n + ".\n");
+                }
+
+                if(input.length > 2) {
+                    println("Usage: Number command only takes one, positive integer argument.\n");
+                }
+
+
             }
-            else if(choice.equalsIgnoreCase("p") || choice.equalsIgnoreCase("period"))
+
+
+            //The R (Dot Radius) Command
+
+            else if(input[0].equalsIgnoreCase("r") 
+                        || input[0].equalsIgnoreCase("radius")
+                        || input[0].equalsIgnoreCase("size")
+                        || input[0].equalsIgnoreCase("dotsize")
+                        || input[0].equalsIgnoreCase("dotradius")) 
+            {
+                int n = -1;
+                if(input.length >= 2) {
+                    n = toPosInt(input[1]);
+                }
+                else {
+                    n = readInt("Enter new Dot Radius: ");    
+                }
+
+                if(n < 0) 
+                    println("Not a valid dot radius.\n");
+                else {
+                    styles.dot_radius = n;
+                    println("\nDot Radius set to " + n + ".\n");
+                }
+                    
+
+            }
+            else if(input[0].equalsIgnoreCase("p") || input[0].equalsIgnoreCase("period"))
             {
                 int n = readInt("Enter New Period (x100): ");
                 if(n < 0) n *= -1;
                 styles.period = n * 100;
             }
-            else if(choice.equalsIgnoreCase("r") || choice.equalsIgnoreCase("radius")) 
-            {
-                int n = readInt("Enter a New Radius: ");
-                if(n < 0) n *= -1;
-                styles.dot_radius = n;
-
-            }
-            else if(choice.equalsIgnoreCase("s") || choice.equalsIgnoreCase("styles"))
+            else if(input[0].equalsIgnoreCase("s") || input[0].equalsIgnoreCase("styles"))
             {
 
                 String s_on = "\ton\t";
@@ -177,18 +198,31 @@ public class TerminalMenu extends Thread
                 }   
             } 
 
-
+            readLine("press enter to return to menu... ");
             println("\n##############################################\n");
         }
     }
 
-    public int readInt(String prompt){
+    private int toPosInt(String str) {
+        try {
+            int value = (new Integer(str)).intValue();
+            if(value < 0)
+                return -1; //negative number
+            return value;
+        }
+        catch (Exception e) {
+            return -2;// not an integer
+        }
+    }
+    private int readInt(String prompt){
         print(prompt);
         while(true)
         {
             String s = readLine("");
             try {
-                int value = (new Integer(s)).intValue();
+                int value = toPosInt(s);
+                if (value < 0)
+                    return -1;
                 return value;
             }
                 catch (Exception e){
@@ -196,7 +230,7 @@ public class TerminalMenu extends Thread
             }
         }
     }
-    public String readLine(String prompt){
+    private String readLine(String prompt){
         print(prompt);
         try {
             String value = buffer.readLine();
